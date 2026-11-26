@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Prompt Quality Checker</title>
+
+  <!-- All styling lives in style.css -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== Page header ===== -->
+  <header class="site-header">
+    <div class="logo-mark" aria-hidden="true">✦</div>
+    <div>
+      <h1>AI Prompt Quality Checker</h1>
+      <p class="tagline">Paste your prompt and see which of the five key parts it contains.</p>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ===== LEFT SIDE: prompt input ===== -->
+    <section class="card input-card" aria-labelledby="inputHeading">
+      <h2 id="inputHeading">Your prompt</h2>
+
+      <label for="promptInput" class="visually-hidden">Enter your AI prompt</label>
+      <textarea
+        id="promptInput"
+        placeholder="Type or paste your AI prompt here..."
+        rows="10"
+      ></textarea>
+
+      <div class="input-meta">
+        <span id="wordCount" class="word-count">0 words</span>
+      </div>
+
+      <!-- Error message (shown only when the input is empty) -->
+      <p id="errorMessage" class="error-message" role="alert" hidden></p>
+
+      <!-- Action buttons -->
+      <div class="button-row">
+        <button id="checkBtn" class="btn btn-primary" type="button">Check Prompt</button>
+        <button id="sampleBtn" class="btn btn-secondary" type="button">Load Sample Prompt</button>
+        <button id="clearBtn" class="btn btn-ghost" type="button">Clear</button>
+      </div>
+
+      <!-- Short reminder of what is being checked -->
+      <div class="tips">
+        <h3>What a strong prompt includes</h3>
+        <ul>
+          <li><strong>Role</strong>: who the AI should act as</li>
+          <li><strong>Task</strong>: what you want it to do</li>
+          <li><strong>Context</strong>: background and who it is for</li>
+          <li><strong>Constraints</strong>: limits, rules and things to avoid</li>
+          <li><strong>Output format</strong>: how the answer should look</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== RIGHT SIDE: analysis results ===== -->
+    <section class="results" aria-live="polite">
+
+      <!-- Shown before the first check -->
+      <div id="emptyState" class="card empty-card">
+        <div class="empty-icon" aria-hidden="true">📝</div>
+        <h2>Your results will appear here</h2>
+        <p>Enter a prompt and select <strong>Check Prompt</strong>, or load the sample prompt to see how it works.</p>
+      </div>
+
+      <!-- Shown after a successful check -->
+      <div id="resultsContent" hidden>
+
+        <!-- Score + rating + progress bar -->
+        <div class="card score-card">
+          <div class="score-top">
+            <div>
+              <h2>Total score</h2>
+              <p class="score-number"><span id="scoreValue">0</span><span class="score-max">/100</span></p>
+            </div>
+            <span id="ratingBadge" class="rating-badge">Rating</span>
+          </div>
+
+          <div class="progress-track" role="progressbar" aria-label="Prompt score"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <!-- Detected / missing components -->
+        <div class="card components-card">
+          <h2>Component check</h2>
+          <ul class="component-list">
+
+            <li class="component-row" id="comp-role">
+              <span class="status-icon" aria-hidden="true"></span>
+              <div class="component-text">
+                <strong>Role</strong>
+                <span>Who the AI should act as</span>
+              </div>
+              <span class="status-label"></span>
+            </li>
+
+            <li class="component-row" id="comp-task">
+              <span class="status-icon" aria-hidden="true"></span>
+              <div class="component-text">
+                <strong>Task</strong>
+                <span>What the AI should do</span>
+              </div>
+              <span class="status-label"></span>
+            </li>
+
+            <li class="component-row" id="comp-context">
+              <span class="status-icon" aria-hidden="true"></span>
+              <div class="component-text">
+                <strong>Context</strong>
+                <span>Background and target audience</span>
+              </div>
+              <span class="status-label"></span>
+            </li>
+
+            <li class="component-row" id="comp-constraints">
+              <span class="status-icon" aria-hidden="true"></span>
+              <div class="component-text">
+                <strong>Constraints</strong>
+                <span>Limits, rules and things to avoid</span>
+              </div>
+              <span class="status-label"></span>
+            </li>
+
+            <li class="component-row" id="comp-format">
+              <span class="status-icon" aria-hidden="true"></span>
+              <div class="component-text">
+                <strong>Output format</strong>
+                <span>How the answer should be presented</span>
+              </div>
+              <span class="status-label"></span>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- Suggestions for missing components -->
+        <div class="card suggestions-card">
+          <h2>Improvement suggestions</h2>
+          <ul id="suggestionList" class="suggestion-list"></ul>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Keyword-based checker. It looks for common words, so use the results as a guide, not a final grade.
+  </footer>
+
+  <!-- All behaviour lives in script.js -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+/* =========================================================
+   AI Prompt Quality Checker - style.css
+   Sections:
+   1. Design tokens (colours, radius, shadows)
+   2. Base / reset
+   3. Header and layout
+   4. Cards
+   5. Input area and buttons
+   6. Score, rating and progress bar
+   7. Component rows (green = detected, red = missing)
+   8. Suggestions
+   9. Responsive rules (tablet and mobile)
+   ========================================================= */
+
+
+/* ---------- 1. Design tokens ---------- */
+:root {
+  --bg: #f3f1fb;              /* light lavender page background */
+  --ink: #1d1a36;             /* main text */
+  --muted: #5f5b7a;           /* secondary text */
+  --card: #ffffff;
+
+  --indigo: #4f46e5;
+  --indigo-dark: #3e36c9;
+  --indigo-soft: #e9e8fd;
+  --violet: #8b5cf6;
+  --violet-soft: #f0e9ff;
+  --blue: #2f7de1;
+  --blue-soft: #e4f0ff;
+  --amber: #f59e0b;
+  --amber-soft: #fff4d9;
+
+  --green: #17995b;           /* detected */
+  --green-soft: #e2f6ec;
+  --red: #d93a4a;             /* missing */
+  --red-soft: #fde8ea;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 10px 30px rgba(60, 50, 140, 0.10);
+  --shadow-hover: 0 14px 28px rgba(60, 50, 140, 0.20);
+
+  --font: "Trebuchet MS", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+
+/* ---------- 2. Base / reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Makes the "hidden" attribute always win over other display rules */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+h1, h2, h3, p, ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Hides text visually but keeps it for screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Clear keyboard focus outline */
+:focus-visible {
+  outline: 3px solid var(--violet);
+  outline-offset: 3px;
+}
+
+
+/* ---------- 3. Header and layout ---------- */
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 8px;
+}
+
+.logo-mark {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  font-size: 1.7rem;
+  color: #fff;
+  background: var(--indigo);
+  border-radius: 18px;
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.35);
+}
+
+.site-header h1 {
+  font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+/* Two columns: input on the left, results on the right */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.site-footer {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 8px 24px 36px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+
+/* ---------- 4. Cards ---------- */
+.card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  border-top: 6px solid var(--indigo);
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 14px;
+}
+
+/* Each card gets its own accent colour */
+.input-card       { border-top-color: var(--indigo); }
+.score-card       { border-top-color: var(--violet); }
+.components-card  { border-top-color: var(--blue); }
+.suggestions-card { border-top-color: var(--amber); }
+.empty-card       { border-top-color: var(--violet); text-align: center; padding: 48px 28px; }
+
+/* Space between the stacked result cards */
+#resultsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.empty-icon {
+  font-size: 2.6rem;
+  margin-bottom: 8px;
+}
+
+.empty-card p {
+  color: var(--muted);
+}
+
+
+/* ---------- 5. Input area and buttons ---------- */
+textarea {
+  width: 100%;
+  min-height: 260px;
+  padding: 16px;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: #faf9ff;
+  border: 2px solid #dcd9f2;
+  border-radius: var(--radius-md);
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 4px var(--indigo-soft);
+}
+
+/* Red border when the user submits an empty prompt */
+textarea.has-error {
+  border-color: var(--red);
+  background: var(--red-soft);
+}
+
+.input-meta {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.word-count {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.error-message {
+  margin-top: 8px;
+  padding: 10px 14px;
+  font-weight: 700;
+  color: var(--red);
+  background: var(--red-soft);
+  border-left: 5px solid var(--red);
+  border-radius: 10px;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Rounded buttons with a smooth hover lift */
+.btn {
+  padding: 12px 22px;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 700;
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+              background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn-primary {
+  color: #fff;
+  background: var(--indigo);
+}
+
+.btn-primary:hover {
+  background: var(--indigo-dark);
+}
+
+.btn-secondary {
+  color: var(--indigo);
+  background: var(--indigo-soft);
+}
+
+.btn-secondary:hover {
+  background: var(--indigo);
+  color: #fff;
+}
+
+.btn-ghost {
+  color: var(--muted);
+  background: #fff;
+  border-color: #d6d3ec;
+}
+
+.btn-ghost:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* Reminder box under the buttons */
+.tips {
+  margin-top: 24px;
+  padding: 16px 18px;
+  background: var(--violet-soft);
+  border-radius: var(--radius-md);
+}
+
+.tips h3 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.tips li {
+  padding: 3px 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.tips strong {
+  color: var(--ink);
+}
+
+
+/* ---------- 6. Score, rating and progress bar ---------- */
+.score-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.score-top h2 {
+  margin-bottom: 0;
+}
+
+.score-number {
+  font-size: 3.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.score-max {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+/* Rating pill. Its colour changes with the rating class set by JavaScript */
+.rating-badge {
+  padding: 8px 18px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--muted);
+  border-radius: var(--radius-pill);
+}
+
+.rating-excellent { background: var(--green); }
+.rating-verygood  { background: #3a9d3f; }
+.rating-good      { background: var(--blue); }
+.rating-average   { background: var(--amber); color: #2b2100; }
+.rating-poor      { background: var(--red); }
+
+/* Progress bar: the width is set by JavaScript and animated here */
+.progress-track {
+  height: 20px;
+  margin-top: 18px;
+  overflow: hidden;
+  background: #e8e6f6;
+  border-radius: var(--radius-pill);
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  background: var(--muted);
+  border-radius: var(--radius-pill);
+  transition: width 1s cubic-bezier(0.22, 0.8, 0.3, 1),
+              background-color 0.4s ease;
+}
+
+.fill-excellent { background: var(--green); }
+.fill-verygood  { background: #3a9d3f; }
+.fill-good      { background: var(--blue); }
+.fill-average   { background: var(--amber); }
+.fill-poor      { background: var(--red); }
+
+
+/* ---------- 7. Component rows ---------- */
+.component-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.component-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  transition: transform 0.2s ease;
+}
+
+.component-row:hover {
+  transform: translateX(4px);
+}
+
+.status-icon {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  border-radius: 50%;
+}
+
+.component-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.component-text span {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.status-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+/* Detected = green */
+.component-row.detected {
+  background: var(--green-soft);
+  border-color: #b9e6cf;
+}
+.component-row.detected .status-icon { background: var(--green); }
+.component-row.detected .status-label { color: var(--green); }
+
+/* Missing = red */
+.component-row.missing {
+  background: var(--red-soft);
+  border-color: #f6c3c8;
+}
+.component-row.missing .status-icon { background: var(--red); }
+.component-row.missing .status-label { color: var(--red); }
+
+
+/* ---------- 8. Suggestions ---------- */
+.suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suggestion-item {
+  padding: 14px 16px;
+  background: var(--amber-soft);
+  border-left: 5px solid var(--amber);
+  border-radius: 12px;
+}
+
+.suggestion-item strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.suggestion-item p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Shown when nothing is missing */
+.suggestion-item.all-good {
+  background: var(--green-soft);
+  border-left-color: var(--green);
+}
+
+
+/* ---------- 9. Responsive rules ---------- */
+
+/* Tablet: stack the two columns */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile: tighter spacing and full-width buttons */
+@media (max-width: 560px) {
+  .site-header {
+    padding: 24px 16px 4px;
+  }
+
+  .layout {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .score-number {
+    font-size: 3rem;
+  }
+
+  .component-row {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .site-footer {
+    padding: 8px 16px 28px;
+  }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
